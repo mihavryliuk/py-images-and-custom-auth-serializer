@@ -39,10 +39,8 @@ class MovieSerializer(serializers.ModelSerializer):
             "description",
             "duration",
             "genres",
-            "actors",
-            "image"
+            "actors"
         )
-        read_only_fields = ("image",)
 
 
 class MovieImageSerializer(serializers.ModelSerializer):
@@ -104,7 +102,7 @@ class MovieSessionListSerializer(MovieSessionSerializer):
         source="cinema_hall.capacity", read_only=True
     )
     tickets_available = serializers.IntegerField(read_only=True)
-    movie_image = serializers.SerializerMethodField()
+    movie_image = serializers.ImageField(source="movie.image", read_only=True)
 
     class Meta:
         model = MovieSession
@@ -117,11 +115,6 @@ class MovieSessionListSerializer(MovieSessionSerializer):
             "tickets_available",
             "movie_image"
         )
-
-    def get_movie_image(self, obj):
-        if obj.movie.image:
-            return obj.movie.image.url
-        return None
 
 
 class TicketSerializer(serializers.ModelSerializer):
